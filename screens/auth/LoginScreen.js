@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   StyleSheet,
   ImageBackground,
@@ -10,22 +10,18 @@ import {
   KeyboardAvoidingView,
   Keyboard,
   TouchableWithoutFeedback,
-  Dimensions,
+  Dimensions
 } from "react-native";
-import { useFonts } from 'expo-font';
-import * as SplashScreen from 'expo-splash-screen';
-
-SplashScreen.preventAutoHideAsync();
 
 const initialState = {
   email: '',
   password: ''
 };
 
-const LoginScreen = () => {
-    const [isOpenKeyboard, setIsOpenKeyboard] = useState(false);
+export default function LoginScreen({ navigation })  {
+  const [isOpenKeyboard, setIsOpenKeyboard] = useState(false);
   const [state, setState] = useState(initialState);
-  const [dimensions, setDimensions] = useState(Dimensions.get("window").width-20*2);
+  const [dimensions, setDimensions] = useState(Dimensions.get("window").width - 20 * 2);
 
   useEffect(() => {
     const onChange = () => {
@@ -34,17 +30,6 @@ const LoginScreen = () => {
     };
     Dimensions.addEventListener('change', onChange);
   }, []);
-  
-  const [fontsLoaded] = useFonts({
-    "Roboto-Regular": require("../assets/fonts/Roboto/Roboto-Regular.ttf"),
-    "Roboto-Medium": require("../assets/fonts/Roboto/Roboto-Medium.ttf"),
-  });
-
-   const onLayoutRootView = useCallback(async () => {
-    if (fontsLoaded) {
-      await SplashScreen.hideAsync();
-    }
-  }, [fontsLoaded]);
 
   const onSubmit = () => {
     setIsOpenKeyboard(false);
@@ -58,13 +43,10 @@ const LoginScreen = () => {
     Keyboard.dismiss();
   };
 
-  if (!fontsLoaded) {
-    return null;
-  }
   return (
     <TouchableWithoutFeedback onPress={keyboardHide}>
-      <View style={styles.container} onLayout={onLayoutRootView}>
-        <ImageBackground source={require("../assets/images/main-bg.jpg")} resizeMode="cover" style={styles.image}>
+      <View style={styles.container}>
+        <ImageBackground source={require("../../assets/images/main-bg.jpg")} resizeMode="cover" style={styles.image}>
         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 0}>
           <View style={{ ...styles.form, width: dimensions + 40 }}>
             <View style={styles.formTitleBox}>
@@ -92,9 +74,12 @@ const LoginScreen = () => {
             >
               <Text style={styles.buttonText}>Войти</Text>
             </TouchableOpacity>
-            <View style={{ ...styles.linkBox, marginBottom: isOpenKeyboard ? 16 : 100 }}>
+              <TouchableOpacity
+                style={{ ...styles.linkBox, marginBottom: isOpenKeyboard ? 16 : 100 }}
+                onPress={() => navigation.navigate('registration')}
+              >
               <Text style={styles.linkText}>Нет аккаунта? Зарегистрироваться</Text>
-            </View>
+            </TouchableOpacity>
           </View>
         </KeyboardAvoidingView>
         </ImageBackground>
@@ -156,5 +141,3 @@ const styles = StyleSheet.create({
     color: '#1B4371',
   }
 });
-
-export default LoginScreen;
