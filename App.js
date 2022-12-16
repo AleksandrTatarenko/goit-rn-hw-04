@@ -5,11 +5,11 @@ import { NavigationContainer } from '@react-navigation/native';
 import AppLoading from 'expo-app-loading';
 import useFonts from './hooks/useFonts';
 
-import Home from './screens/main/Home';
+import { useRoute } from './router';
 
 export default function App() {
   const [IsReady, SetIsReady] = useState(false);
-  
+  const routing = useRoute(false);
 
   const LoadFonts = async () => {
     await useFonts();
@@ -26,7 +26,7 @@ export default function App() {
   }
   return (
     <NavigationContainer>
-      <Home />
+      {routing}
     </NavigationContainer>
   );
 };
